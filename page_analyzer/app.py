@@ -6,6 +6,7 @@ from psycopg2.extras import NamedTupleCursor
 app = flask.Flask(__name__)
 DATABASE_URL = 'postgresql://pguser:pgpass@localhost:5432/pgdb'
 
+
 @app.route('/')
 def main():
     return flask.render_template('index.html')
