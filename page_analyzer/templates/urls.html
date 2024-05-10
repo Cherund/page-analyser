@@ -16,7 +16,13 @@
     </tr>
     </thead>
     <tbody>
-
+    {% for url in urls %}
+    <tr>
+      <td>{{ url.id }}</td>
+      <td><a href="/url/{{url.id}}">{{ url.name }}</a></td>
+      <td>{{ url.created_at }}</td>
+    </tr>
+    {% endfor %}
     </tbody>
   </table>
 </div>
