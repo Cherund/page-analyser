@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import flask
-from page_analyzer.utils import (add_item, get_item,
-                                 check_url, normalize_url,
-                                 get_all, get_env_var)
+from page_analyzer.utils import (add_item, get_item, check_url,
+                                 normalize_url, get_all, get_env_var,
+                                 add_check, get_checks)
 
 
 app = flask.Flask(__name__)
@@ -17,15 +17,17 @@ def main():
 
 @app.route('/urls')
 def get_urls():
-    urls = get_all()
-    return flask.render_template('urls.html', urls=urls)
+    urls = get_all('urls')
+    checks = get_all('url_checks')
+    return flask.render_template('urls.html', urls=urls, checks=checks)
 
 
-@app.route('/url/<int:url_id>')
+@app.route('/urls/<url_id>')
 def show_url_page(url_id):
     url = get_item(url_id)
-    return flask.render_template('url.html', url=url.name,
-                                 id=url.id, date=url.created_at)
+    checks = get_checks(url_id)
+    print(checks)
+    return flask.render_template('url.html', url=url, checks=checks)
 
 
 @app.post('/url')
@@ -38,4 +40,10 @@ def add_url():
 
     url = normalize_url(url)
     url_id = add_item(url)
+    return flask.redirect(flask.url_for('show_url_page', url_id=url_id))
+
+
+@app.post('/urls/<int:url_id>/checks')
+def check_url_page(url_id):
+    add_check(url_id)
     return flask.redirect(flask.url_for('show_url_page', url_id=url_id))

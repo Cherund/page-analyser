@@ -3,7 +3,7 @@
 
 <main class="flex-grow-1">
     <div class="container-lg mt-3">
-      <h1>Website: {{ url }}</h1>
+      <h1>Website: {{ url.name }}</h1>
 
 
   <div class="table-responsive">
@@ -11,40 +11,49 @@
       <tbody>
         <tr>
           <td>ID</td>
-          <td>{{id}}</td>
+          <td>{{url.id}}</td>
         </tr>
         <tr>
           <td>Name</td>
-          <td>{{ url }}</td>
+          <td>{{ url.url }}</td>
         </tr>
         <tr>
           <td>Date of creation</td>
-          <td>{{ date }}</td>
+          <td>{{ url.created_at }}</td>
         </tr>
       </tbody>
     </table>
   </div>
 
     <h2 class="mt-5 mb-3">Checks</h2>
-    <form method="post" action="/urls/1/checks">
+    <form method="post" action="{{ url_for('check_url_page', url_id=url.id) }}">
     <input type="submit" class="btn btn-primary" value="Start check">
     </form>
 
   <div>
     <table class="table table-bordered table-hover mt-2" data-test="checks">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Status code</th>
-        <th>h1</th>
-        <th>Title</th>
-        <th>Description</th>
-        <th>Date of creation</th>
-      </tr>
-    </thead>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Status code</th>
+          <th>h1</th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Date of creation</th>
+        </tr>
+      </thead>
       <tbody>
-
-    </tbody>
+      {% for check in checks %}
+        <tr>
+          <td>{{ check.id }}</td>
+          <td>{{ check.status_code }}</td>
+          <td>{{ check.h1 }}</td>
+          <td>{{ check.title }}</td>
+          <td>{{ check.description }}</td>
+          <td>{{ check.created_at }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
     </table>
   </div>
 
