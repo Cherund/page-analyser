@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 
+{% if messages %}
+  {% for _, message in messages %}
+    <div class="alert alert-danger" role="alert">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+
 <main class="flex-grow-1">
     <div class="container-lg mt-3">
       <h1>Website: {{ url.name }}</h1>
@@ -15,7 +21,7 @@
         </tr>
         <tr>
           <td>Name</td>
-          <td>{{ url.url }}</td>
+          <td>{{ url.name }}</td>
         </tr>
         <tr>
           <td>Date of creation</td>

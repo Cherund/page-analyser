@@ -26,8 +26,9 @@ def get_urls():
 def show_url_page(url_id):
     url = get_item(url_id)
     checks = get_checks(url_id)
-    print(checks)
-    return flask.render_template('url.html', url=url, checks=checks)
+    messages = flask.get_flashed_messages(with_categories=True)
+    return flask.render_template('url.html', url=url, checks=checks,
+                                 messages=messages)
 
 
 @app.post('/url')
@@ -45,5 +46,9 @@ def add_url():
 
 @app.post('/urls/<int:url_id>/checks')
 def check_url_page(url_id):
-    add_check(url_id)
+    message = add_check(url_id)
+    if message:
+        flask.flash(message, 'error')
+
     return flask.redirect(flask.url_for('show_url_page', url_id=url_id))
+

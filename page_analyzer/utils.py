@@ -4,6 +4,8 @@ import psycopg2
 from psycopg2.extras import NamedTupleCursor
 from dotenv import load_dotenv
 from urllib.parse import urlparse
+import requests
+# from bs4 import BeautifulSoup
 
 
 def get_env_var(var_name):
@@ -55,12 +57,19 @@ def get_all(table_name):
 
 
 def add_check(url_id):
+    url = get_item(url_id).name
+
+    try:
+        url_response = requests.get(url)
+    except requests.exceptions.ConnectionError:
+        return 'Error occurred during check'
+
+
     conn = psycopg2.connect(get_env_var('DATABASE_URL'))
     with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
         curs.execute(
-                'INSERT INTO url_checks (url_id) VALUES (%s) '
-                'RETURNING id;',
-                (url_id, )
+                'INSERT INTO url_checks (url_id, status_code) VALUES (%s, %s);',
+                (url_id, url_response.status_code,)
         )
         conn.commit()
 
