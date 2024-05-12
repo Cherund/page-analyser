@@ -64,11 +64,11 @@ def add_check(url_id):
     except requests.exceptions.ConnectionError:
         return 'Error occurred during check'
 
-
     conn = psycopg2.connect(get_env_var('DATABASE_URL'))
     with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
         curs.execute(
-                'INSERT INTO url_checks (url_id, status_code) VALUES (%s, %s);',
+                'INSERT INTO url_checks (url_id, status_code) '
+                'VALUES (%s, %s);',
                 (url_id, url_response.status_code,)
         )
         conn.commit()

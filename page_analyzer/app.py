@@ -51,4 +51,3 @@ def check_url_page(url_id):
         flask.flash(message, 'error')
 
     return flask.redirect(flask.url_for('show_url_page', url_id=url_id))
-
