@@ -1,11 +1,8 @@
 import os
 import validators
-import psycopg2
-from psycopg2.extras import NamedTupleCursor
 from dotenv import load_dotenv
 from urllib.parse import urlparse
-import requests
-# from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup
 
 
 def get_env_var(var_name):
@@ -26,59 +23,11 @@ def normalize_url(url):
     return f'{parsed_url.scheme}://{parsed_url.netloc}'
 
 
-def add_item(url):
-    conn = psycopg2.connect(get_env_var('DATABASE_URL'))
-    with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
-        curs.execute(
-                'INSERT INTO urls (name) VALUES (%s) '
-                'RETURNING id;',
-                (url, )
-        )
-        conn.commit()
-        return curs.fetchone().id
-
-
-def get_item(url_id):
-    conn = psycopg2.connect(get_env_var('DATABASE_URL'))
-    with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
-        curs.execute(
-            'SELECT * FROM urls WHERE id=(%s);', (url_id, )
-        )
-        return curs.fetchone()
-
-
-def get_all(table_name):
-    conn = psycopg2.connect(get_env_var('DATABASE_URL'))
-    with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
-        curs.execute(
-            f'SELECT * FROM {table_name}',
-        )
-        return curs.fetchall()[::-1]
-
-
-def add_check(url_id):
-    url = get_item(url_id).name
-
-    try:
-        url_response = requests.get(url)
-    except requests.exceptions.ConnectionError:
-        return 'Error occurred during check'
-
-    conn = psycopg2.connect(get_env_var('DATABASE_URL'))
-    with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
-        curs.execute(
-                'INSERT INTO url_checks (url_id, status_code) '
-                'VALUES (%s, %s);',
-                (url_id, url_response.status_code,)
-        )
-        conn.commit()
-
-
-def get_checks(url_id):
-    conn = psycopg2.connect(get_env_var('DATABASE_URL'))
-    with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
-        curs.execute(
-            'SELECT * FROM url_checks WHERE url_id=(%s)',
-            (url_id, )
-        )
-        return curs.fetchall()[::-1]
+def get_tag_str(url_content, tag, attrs={}):
+    soup = BeautifulSoup(url_content, 'html.parser')
+    tag_str = soup.find(name=tag, attrs=attrs)
+    print(tag_str)
+    if tag_str:
+        return tag_str.text or tag_str['content']
+    else:
+        return ''
