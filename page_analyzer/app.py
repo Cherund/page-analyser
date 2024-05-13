@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import flask
-from page_analyzer.utils import (add_item, get_item, check_url,
-                                 normalize_url, get_all, get_env_var,
-                                 add_check, get_checks)
+from page_analyzer.db_manager import (add_item, get_item, get_urls_last_check,
+                                      add_check, get_url_checks)
+from page_analyzer.utils import check_url, normalize_url, get_env_var
 
 
 app = flask.Flask(__name__)
@@ -17,15 +17,14 @@ def main():
 
 @app.route('/urls')
 def get_urls():
-    urls = get_all('urls')
-    checks = get_all('url_checks')
-    return flask.render_template('urls.html', urls=urls, checks=checks)
+    urls_check = get_urls_last_check()
+    return flask.render_template('urls.html', urls_check=urls_check)
 
 
 @app.route('/urls/<url_id>')
 def show_url_page(url_id):
     url = get_item(url_id)
-    checks = get_checks(url_id)
+    checks = get_url_checks(url_id)
     messages = flask.get_flashed_messages(with_categories=True)
     return flask.render_template('url.html', url=url, checks=checks,
                                  messages=messages)
