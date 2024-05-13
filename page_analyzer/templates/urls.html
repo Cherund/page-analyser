@@ -16,12 +16,12 @@
     </tr>
     </thead>
     <tbody>
-    {% for url in urls %}
+    {% for url_check in urls_check %}
     <tr>
-      <td>{{ url.id }}</td>
-      <td><a href="/urls/{{ url.id }}">{{ url.name }}</a></td>
-
-
+      <td>{{ url_check.id }}</td>
+      <td><a href="/urls/{{ url_check.id }}">{{ url_check.name }}</a></td>
+      <td>{{ url_check.created_at or '' }}</td>
+      <td>{{url_check.status_code or '' }}</td>
     </tr>
     {% endfor %}
     </tbody>
