@@ -25,13 +25,13 @@ def get_item(url_id):
         return curs.fetchone()
 
 
-# def get_all(table_name):
-#     conn = psycopg2.connect(get_env_var('DATABASE_URL'))
-#     with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
-#         curs.execute(
-#             f'SELECT * FROM {table_name} ORDER BY id DESC',
-#         )
-#         return curs.fetchall()
+def get_websites():
+    conn = psycopg2.connect(get_env_var('DATABASE_URL'))
+    with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
+        curs.execute(
+            'SELECT name FROM urls',
+        )
+        return curs.fetchall()
 
 
 def add_check(url_id):
@@ -73,14 +73,13 @@ def get_url_checks(url_id):
 def get_urls_last_check():
     conn = psycopg2.connect(get_env_var('DATABASE_URL'))
     with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
-        with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
-            curs.execute('SELECT DISTINCT ON (urls.id) '
-                         'urls.id AS id, '
-                         'url_checks.id AS check_id, '
-                         'url_checks.status_code AS status_code, '
-                         'url_checks.created_at AS created_at, '
-                         'urls.name AS name '
-                         'FROM urls '
-                         'LEFT JOIN url_checks ON urls.id=url_checks.url_id '
-                         'ORDER BY urls.id DESC, check_id DESC;')
-            return curs.fetchall()
+        curs.execute('SELECT DISTINCT ON (urls.id) '
+                     'urls.id AS id, '
+                     'url_checks.id AS check_id, '
+                     'url_checks.status_code AS status_code, '
+                     'url_checks.created_at AS created_at, '
+                     'urls.name AS name '
+                     'FROM urls '
+                     'LEFT JOIN url_checks ON urls.id=url_checks.url_id '
+                     'ORDER BY urls.id DESC, check_id DESC;')
+        return curs.fetchall()
