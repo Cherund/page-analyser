@@ -2,8 +2,8 @@
 {% block content %}
 
 {% if messages %}
-  {% for _, message in messages %}
-    <div class="alert alert-danger" role="alert">{{ message }}</div>
+  {% for type, message in messages %}
+    <div class="alert alert-{{ type }}" role="alert">{{ message }}</div>
   {% endfor %}
 {% endif %}
 
