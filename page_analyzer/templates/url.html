@@ -3,13 +3,7 @@
 
 {% if messages %}
   {% for type, message in messages %}
-    <div class="alert alert-{{ type }}" role="alert">
-      {% if type == 'danger' %}
-        {{ 'Произошла ошибка при проверке' }}
-      {% else %}
-        {{'Страница успешно добавлена'}}
-      {% endif %}
-    </div>
+    <div class="alert alert-{{ type }}" role="alert">{{ message }}</div>
   {% endfor %}
 {% endif %}
 
