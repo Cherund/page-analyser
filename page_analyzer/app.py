@@ -34,8 +34,8 @@ def show_url_page(url_id):
 def add_url():
     url = flask.request.form.get('url')
     message = check_url(url)
-    if message:
-        flask.flash(message, 'error')
+    flask.flash(*message)
+    if 'danger' in message:
         return flask.redirect(flask.url_for('main'))
 
     url = normalize_url(url)
@@ -47,6 +47,6 @@ def add_url():
 def check_url_page(url_id):
     message = add_check(url_id)
     if message:
-        flask.flash(message, 'error')
+        flask.flash(*message)
 
     return flask.redirect(flask.url_for('show_url_page', url_id=url_id))
