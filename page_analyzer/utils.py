@@ -12,10 +12,15 @@ def get_env_var(var_name):
 
 def check_url(url):
     if len(url) > 255:
-        return 'URL exceeds 255 symbols'
+        return 'URL превышает 255 символов', 'danger'
+        # return 'URL exceeds 255 symbols', 'danger'
 
     if not validators.url(url):
-        return 'Incorrect URL'
+        return 'Некорректный URL', 'danger'
+        # return 'Incorrect URL', 'danger'
+
+    return 'Страница успешно добавлена', 'success'
+    # return 'Page was successfully added', 'success'
 
 
 def normalize_url(url):
