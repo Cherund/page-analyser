@@ -3,6 +3,7 @@ import validators
 from dotenv import load_dotenv
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
+# from db_manager import get_websites
 
 
 def get_env_var(var_name):
@@ -10,7 +11,7 @@ def get_env_var(var_name):
     return os.environ.get(var_name)
 
 
-def check_url(url):
+def check_url(url, websites):
     if len(url) > 255:
         return 'URL превышает 255 символов', 'danger'
         # return 'URL exceeds 255 symbols', 'danger'
@@ -18,6 +19,9 @@ def check_url(url):
     if not validators.url(url):
         return 'Некорректный URL', 'danger'
         # return 'Incorrect URL', 'danger'
+
+    if url in websites:
+        return 'Страница уже существует', 'danger'
 
     return 'Страница успешно добавлена', 'success'
     # return 'Page was successfully added', 'success'
