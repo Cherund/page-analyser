@@ -17,6 +17,9 @@ def main():
 
 @app.route('/urls')
 def get_urls():
+    messages = flask.get_flashed_messages(with_categories=True)
+    if messages:
+        return flask.render_template('index.html', messages=messages, )
     urls_check = get_urls_last_check()
     return flask.render_template('urls.html', urls_check=urls_check)
 
@@ -36,7 +39,7 @@ def add_url():
     message = check_url(url)
     flask.flash(*message)
     if 'danger' in message:
-        return flask.redirect(flask.url_for('main'))
+        return flask.redirect(flask.url_for('get_urls'))
 
     url = normalize_url(url)
     url_id = add_item(url)
