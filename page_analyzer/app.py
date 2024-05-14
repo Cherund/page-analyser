@@ -23,14 +23,11 @@ def get_urls():
     return flask.render_template('urls.html', urls_check=urls_check)
 
 
-@app.route('/urls/<url_id>')
+@app.route('/urls/<int:url_id>')
 def show_url_page(url_id):
     url = get_item(url_id)
     checks = get_url_checks(url_id)
     messages = flask.get_flashed_messages(with_categories=True)
-    if 'danger' in messages:
-        return flask.render_template('url.html', url=url, checks=checks,
-                                     messages=messages), 422
 
     return flask.render_template('url.html', url=url, checks=checks,
                                  messages=messages)
