@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Flask app to analyze pages"
 authors = ["Egor Gerimovich <cherund@gmail.com>"]
 readme = "README.md"
+packages = [{include="page_analyzer"},]
 
 [tool.poetry.dependencies]
 python = "^3.9"
