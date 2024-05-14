@@ -46,7 +46,6 @@ def add_url():
 @app.post('/urls/<int:url_id>/checks')
 def check_url_page(url_id):
     message = add_check(url_id)
-    if message:
-        flask.flash(*message)
+    flask.flash(*message)
 
     return flask.redirect(flask.url_for('show_url_page', url_id=url_id))

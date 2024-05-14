@@ -57,6 +57,7 @@ def add_check(url_id):
                 (url_id, url_response.status_code, h1, title, description)
         )
         conn.commit()
+    return 'Страница успешно проверена', 'success'
 
 
 def get_url_checks(url_id):
