@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import flask
 from page_analyzer.db_manager import (add_item, get_item, get_urls_last_check,
-                                      add_check, get_url_checks)
+                                      add_check, get_url_checks, get_websites)
 from page_analyzer.utils import check_url, normalize_url, get_env_var
 
 
@@ -11,15 +11,14 @@ app.secret_key = get_env_var('SECRET_KEY')
 
 @app.route('/')
 def main():
-    messages = flask.get_flashed_messages(with_categories=True)
-    return flask.render_template('index.html', messages=messages,)
+    return flask.render_template('index.html',)
 
 
 @app.route('/urls')
 def get_urls():
     messages = flask.get_flashed_messages(with_categories=True)
     if messages:
-        return flask.render_template('index.html', messages=messages, )
+        return flask.render_template('index.html', messages=messages, ), 422
     urls_check = get_urls_last_check()
     return flask.render_template('urls.html', urls_check=urls_check)
 
@@ -36,12 +35,13 @@ def show_url_page(url_id):
 @app.post('/url')
 def add_url():
     url = flask.request.form.get('url')
-    message = check_url(url)
+    url = normalize_url(url)
+    websites = [url.name for url in get_websites()]
+    message = check_url(url, websites)
     flask.flash(*message)
     if 'danger' in message:
         return flask.redirect(flask.url_for('get_urls'))
 
-    url = normalize_url(url)
     url_id = add_item(url)
     return flask.redirect(flask.url_for('show_url_page', url_id=url_id))
 
