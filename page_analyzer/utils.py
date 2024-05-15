@@ -11,7 +11,7 @@ def get_env_var(var_name):
     return os.environ.get(var_name)
 
 
-def check_url(url, websites):
+def check_url(url, url_info):
     if len(url) > 255:
         return 'URL превышает 255 символов', 'danger'
         # return 'URL exceeds 255 symbols', 'danger'
@@ -20,8 +20,9 @@ def check_url(url, websites):
         return 'Некорректный URL', 'danger'
         # return 'Incorrect URL', 'danger'
 
-    if url in websites:
-        return 'Страница уже существует', 'danger'
+    if url_info:
+        return 'Страница уже существует', 'info'
+        # return 'Page already exists', 'info'
 
     return 'Страница успешно добавлена', 'success'
     # return 'Page was successfully added', 'success'
