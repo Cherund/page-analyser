@@ -25,14 +25,16 @@ def get_item(url_id):
         return curs.fetchone()
 
 
-def get_websites():
+def check_url_exists(url):
     conn = psycopg2.connect(get_env_var('DATABASE_URL'))
     with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
         curs.execute(
-            'SELECT name FROM urls',
+            'SELECT id, name FROM urls WHERE name=(%s)',
+            (url, )
         )
-        return curs.fetchall()
+        return curs.fetchone()
 
+print(check_url_exists('https://google.com'))
 
 def add_check(url_id):
     url = get_item(url_id).name
