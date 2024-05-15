@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import flask
-from page_analyzer.db_manager import (add_item, get_item, get_urls_last_check,
-                                      add_check, get_url_checks, check_url_exists)
+from page_analyzer.db_manager import (add_item, get_item,
+                                      get_urls_last_check, add_check,
+                                      get_url_checks, check_url_exists)
 from page_analyzer.utils import check_url, normalize_url, get_env_var
 
 
