@@ -7,9 +7,8 @@ def add_item(url):
     conn = psycopg2.connect(get_env_var('DATABASE_URL'))
     with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
         curs.execute(
-                'INSERT INTO urls (name) VALUES (%s) '
-                'RETURNING id;',
-                (url, )
+            'INSERT INTO urls (name) VALUES (%s) RETURNING id;',
+            (url, )
         )
         conn.commit()
         return curs.fetchone().id
@@ -38,10 +37,10 @@ def add_check(url_id, url_info):
     conn = psycopg2.connect(get_env_var('DATABASE_URL'))
     with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
         curs.execute(
-                'INSERT INTO url_checks (url_id, status_code, '
-                'h1, title, description) '
-                'VALUES (%s, %s, %s, %s, %s);',
-                (url_id, *url_info)
+            'INSERT INTO url_checks (url_id, status_code, '
+            'h1, title, description) '
+            'VALUES (%s, %s, %s, %s, %s);',
+            (url_id, *url_info)
         )
         conn.commit()
 
