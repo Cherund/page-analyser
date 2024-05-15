@@ -1,7 +1,6 @@
-import requests
 import psycopg2
 from psycopg2.extras import NamedTupleCursor
-from page_analyzer.utils import get_env_var, get_tag_str
+from page_analyzer.utils import get_env_var
 
 
 def add_item(url):
@@ -35,29 +34,16 @@ def check_url_exists(url):
         return curs.fetchone()
 
 
-def add_check(url_id):
-    url = get_item(url_id).name
-
-    try:
-        url_response = requests.get(url)
-    except requests.exceptions.ConnectionError:
-        return 'Произошла ошибка при проверке', 'danger'
-
-    h1 = get_tag_str(url_response.content, 'h1')
-    title = get_tag_str(url_response.content, 'title')
-    description = get_tag_str(url_response.content, 'meta',
-                              {'name': "description"})
-
+def add_check(url_id, url_info):
     conn = psycopg2.connect(get_env_var('DATABASE_URL'))
     with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
         curs.execute(
                 'INSERT INTO url_checks (url_id, status_code, '
                 'h1, title, description) '
                 'VALUES (%s, %s, %s, %s, %s);',
-                (url_id, url_response.status_code, h1, title, description)
+                (url_id, *url_info)
         )
         conn.commit()
-    return 'Страница успешно проверена', 'success'
 
 
 def get_url_checks(url_id):

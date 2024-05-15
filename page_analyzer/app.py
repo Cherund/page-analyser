@@ -3,7 +3,8 @@ import flask
 from page_analyzer.db_manager import (add_item, get_item,
                                       get_urls_last_check, add_check,
                                       get_url_checks, check_url_exists)
-from page_analyzer.utils import check_url, normalize_url, get_env_var
+from page_analyzer.utils import (check_url, normalize_url,
+                                 get_env_var, check_status, get_url_info)
 
 
 app = flask.Flask(__name__)
@@ -53,7 +54,11 @@ def add_url():
 
 @app.post('/urls/<int:url_id>/checks')
 def check_url_page(url_id):
-    message = add_check(url_id)
+    url = get_item(url_id).name
+    message = check_status(url)
     flask.flash(*message)
+    if 'success' in message:
+        url_info = get_url_info(url)
+        add_check(url_id, url_info)
 
     return flask.redirect(flask.url_for('show_url_page', url_id=url_id))

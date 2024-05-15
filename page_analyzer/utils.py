@@ -3,6 +3,7 @@ import validators
 from dotenv import load_dotenv
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
+import requests
 
 
 def get_env_var(var_name):
@@ -25,6 +26,23 @@ def check_url(url, url_info):
 
     return 'Страница успешно добавлена', 'success'
     # return 'Page was successfully added', 'success'
+
+
+def check_status(url):
+    try:
+        requests.get(url)
+    except requests.RequestException:
+        return 'Произошла ошибка при проверке', 'danger'
+    return 'Страница успешно проверена', 'success'
+
+
+def get_url_info(url):
+    url_response = requests.get(url)
+    h1 = get_tag_str(url_response.content, 'h1')
+    title = get_tag_str(url_response.content, 'title')
+    description = get_tag_str(url_response.content, 'meta',
+                              {'name': "description"})
+    return url_response.status_code, h1, title, description
 
 
 def normalize_url(url):
