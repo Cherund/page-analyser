@@ -34,7 +34,6 @@ def check_url_exists(url):
         )
         return curs.fetchone()
 
-print(check_url_exists('https://google.com'))
 
 def add_check(url_id):
     url = get_item(url_id).name
