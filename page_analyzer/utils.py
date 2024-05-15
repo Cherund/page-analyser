@@ -28,22 +28,27 @@ def check_url(url, url_info):
     # return 'Page was successfully added', 'success'
 
 
-def check_status(url):
+def get_url_response(url):
     response = requests.get(url)
+
     if requests.Response.raise_for_status(response):
         raise requests.RequestException
-        # return 'Произошла ошибка при проверке', 'danger'
-    # return 'Страница успешно проверена', 'success'
+
     return response
 
 
 def get_url_info(url):
-    url_response = check_status(url)
+    try:
+        url_response = get_url_response(url)
+    except requests.RequestException:
+        return ('Произошла ошибка при проверке', 'danger'), None
+
     h1 = get_tag_str(url_response.content, 'h1')
     title = get_tag_str(url_response.content, 'title')
     description = get_tag_str(url_response.content, 'meta',
                               {'name': "description"})
-    return url_response.status_code, h1, title, description
+    return (('Страница успешно проверена', 'success'),
+            (url_response.status_code, h1, title, description))
 
 
 def normalize_url(url):
@@ -54,7 +59,6 @@ def normalize_url(url):
 def get_tag_str(url_content, tag, attrs={}):
     soup = BeautifulSoup(url_content, 'html.parser')
     tag_str = soup.find(name=tag, attrs=attrs)
-    print(tag_str)
     if tag_str:
         return tag_str.text or tag_str['content']
     else:
