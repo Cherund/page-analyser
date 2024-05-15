@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import flask
 from page_analyzer.db_manager import (add_item, get_item, get_urls_last_check,
-                                      add_check, get_url_checks, get_websites)
+                                      add_check, get_url_checks, check_url_exists)
 from page_analyzer.utils import check_url, normalize_url, get_env_var
 
 
@@ -37,13 +37,16 @@ def show_url_page(url_id):
 def add_url():
     url = flask.request.form.get('url')
     url = normalize_url(url)
-    websites = [url.name for url in get_websites()]
-    message = check_url(url, websites)
+    url_info = check_url_exists(url)
+    message = check_url(url, url_info)
     flask.flash(*message)
     if 'danger' in message:
         return flask.redirect(flask.url_for('get_urls'))
 
-    url_id = add_item(url)
+    if url_info:
+        url_id = url_info.id
+    else:
+        url_id = add_item(url)
     return flask.redirect(flask.url_for('show_url_page', url_id=url_id))
 
 
