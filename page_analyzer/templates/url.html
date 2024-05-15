@@ -1,16 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 
-{% if messages %}
-  {% for type, message in messages %}
-    <div class="alert alert-{{ type }}" role="alert">{{ message }}</div>
-  {% endfor %}
-{% endif %}
-
 <main class="flex-grow-1">
     <div class="container-lg mt-3">
       <h1>Website: {{ url.name }}</h1>
-
 
   <div class="table-responsive">
     <table class="table table-bordered table-hover text-nowrap" data-test="url">
