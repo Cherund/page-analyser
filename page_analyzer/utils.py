@@ -3,7 +3,6 @@ import validators
 from dotenv import load_dotenv
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
-# from db_manager import get_websites
 
 
 def get_env_var(var_name):

@@ -42,7 +42,6 @@ def add_check(url_id):
         url_response = requests.get(url)
     except requests.exceptions.ConnectionError:
         return 'Произошла ошибка при проверке', 'danger'
-        # return 'Error occurred during check', 'danger'
 
     h1 = get_tag_str(url_response.content, 'h1')
     title = get_tag_str(url_response.content, 'title')
