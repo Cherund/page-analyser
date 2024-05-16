@@ -14,18 +14,14 @@ def get_env_var(var_name):
 def check_url(url, url_info):
     if len(url) > 255:
         return 'URL превышает 255 символов', 'danger'
-        # return 'URL exceeds 255 symbols', 'danger'
 
     if not validators.url(url):
         return 'Некорректный URL', 'danger'
-        # return 'Incorrect URL', 'danger'
 
     if url_info:
         return 'Страница уже существует', 'info'
-        # return 'Page already exists', 'info'
 
     return 'Страница успешно добавлена', 'success'
-    # return 'Page was successfully added', 'success'
 
 
 def get_url_response(url):
@@ -47,6 +43,7 @@ def get_url_info(url):
     title = get_tag_str(url_response.content, 'title')
     description = get_tag_str(url_response.content, 'meta',
                               {'name': "description"})
+
     return (('Страница успешно проверена', 'success'),
             (url_response.status_code, h1, title, description))
 
