@@ -1,10 +1,10 @@
 import psycopg2
+import os
 from psycopg2.extras import NamedTupleCursor
-from page_analyzer.utils import get_env_var
 
 
 def add_item(url):
-    conn = psycopg2.connect(get_env_var('DATABASE_URL'))
+    conn = psycopg2.connect(os.getenv('DATABASE_URL'))
     with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
         curs.execute(
             'INSERT INTO urls (name) VALUES (%s) RETURNING id;',
@@ -15,7 +15,7 @@ def add_item(url):
 
 
 def get_item(url_id):
-    conn = psycopg2.connect(get_env_var('DATABASE_URL'))
+    conn = psycopg2.connect(os.getenv('DATABASE_URL'))
     with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
         curs.execute(
             'SELECT * FROM urls WHERE id=(%s);', (url_id, )
@@ -24,7 +24,7 @@ def get_item(url_id):
 
 
 def check_url_exists(url):
-    conn = psycopg2.connect(get_env_var('DATABASE_URL'))
+    conn = psycopg2.connect(os.getenv('DATABASE_URL'))
     with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
         curs.execute(
             'SELECT id, name FROM urls WHERE name=(%s)',
@@ -34,7 +34,7 @@ def check_url_exists(url):
 
 
 def add_check(url_id, url_info):
-    conn = psycopg2.connect(get_env_var('DATABASE_URL'))
+    conn = psycopg2.connect(os.getenv('DATABASE_URL'))
     with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
         curs.execute(
             'INSERT INTO url_checks (url_id, status_code, '
@@ -46,7 +46,7 @@ def add_check(url_id, url_info):
 
 
 def get_url_checks(url_id):
-    conn = psycopg2.connect(get_env_var('DATABASE_URL'))
+    conn = psycopg2.connect(os.getenv('DATABASE_URL'))
     with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
         curs.execute(
             'SELECT * FROM url_checks WHERE url_id=(%s) ORDER BY id DESC',
@@ -56,7 +56,7 @@ def get_url_checks(url_id):
 
 
 def get_urls_last_check():
-    conn = psycopg2.connect(get_env_var('DATABASE_URL'))
+    conn = psycopg2.connect(os.getenv('DATABASE_URL'))
     with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
         curs.execute('SELECT DISTINCT ON (urls.id) '
                      'urls.id AS id, '

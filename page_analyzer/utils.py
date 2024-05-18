@@ -1,27 +1,27 @@
-import os
+# import os
 import validators
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 import requests
 
 
-def get_env_var(var_name):
-    load_dotenv()
-    return os.environ.get(var_name)
+# def get_env_var(var_name):
+#     load_dotenv()
+#     return os.environ.get(var_name)
 
 
-def check_url(url, url_info):
+def validate_url(url):
     if len(url) > 255:
         return 'URL превышает 255 символов', 'danger'
 
     if not validators.url(url):
         return 'Некорректный URL', 'danger'
 
-    if url_info:
-        return 'Страница уже существует', 'info'
-
-    return 'Страница успешно добавлена', 'success'
+    # if url_info:
+    #     return 'Страница уже существует', 'info'
+    #
+    # return 'Страница успешно добавлена', 'success'
 
 
 def get_url_response(url):
