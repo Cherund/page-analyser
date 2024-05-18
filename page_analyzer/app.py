@@ -18,9 +18,7 @@ def main():
 
 @app.route('/urls')
 def get_urls():
-    # messages = get_flashed_messages(with_categories=True)
-    # if messages:
-    #     return render_template('index.html', messages=messages, ), 422
+
     urls_check = db.get_urls_last_check()
     return render_template('urls.html', urls_check=urls_check)
 
@@ -30,12 +28,9 @@ def show_url_page(url_id):
     url = db.get_item(url_id)
     if not url:
         abort(404)
-    else:
-        checks = db.get_url_checks(url_id)
-        messages = get_flashed_messages(with_categories=True)
 
-        return render_template('url.html', url=url, checks=checks,
-                               messages=messages)
+    checks = db.get_url_checks(url_id)
+    return render_template('url.html', url=url, checks=checks)
 
 
 @app.errorhandler(404)
