@@ -6,22 +6,17 @@ from bs4 import BeautifulSoup
 import requests
 
 
-# def get_env_var(var_name):
-#     load_dotenv()
-#     return os.environ.get(var_name)
-
-
-def validate_url(url):
+def validate_url(url, url_info):
     if len(url) > 255:
         return 'URL превышает 255 символов', 'danger'
 
     if not validators.url(url):
         return 'Некорректный URL', 'danger'
 
-    # if url_info:
-    #     return 'Страница уже существует', 'info'
-    #
-    # return 'Страница успешно добавлена', 'success'
+    if url_info:
+        return 'Страница уже существует', 'info'
+
+    return 'Страница успешно добавлена', 'success'
 
 
 def get_url_response(url):
