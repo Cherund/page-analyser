@@ -70,7 +70,7 @@ def add_url():
         url_id = url_info.id
     else:
         flash('Страница успешно добавлена', 'success')
-        url_id = db.add_item(url)
+        url_id = db.add_item(normal_url)
 
     return redirect(url_for('show_url_page', url_id=url_id))
 
