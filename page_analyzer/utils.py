@@ -58,7 +58,3 @@ def get_tag_str(url_content, tag, attrs={}):
         return text
     else:
         return ''
-
-x= get_url_info('https://github.com')
-print(len(x[1][3]))
-print(x[1][3])
