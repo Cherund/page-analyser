@@ -4,6 +4,11 @@ from bs4 import BeautifulSoup
 import requests
 
 
+def normalize_url(url):
+    parsed_url = urlparse(url)
+    return f'{parsed_url.scheme}://{parsed_url.netloc}'
+
+
 def validate_url(url):
     if len(url) > 255:
         return 'URL превышает 255 символов'
@@ -21,6 +26,20 @@ def get_url_response(url):
     return response
 
 
+def get_tag_str(url_content, tag, attrs={}):
+    soup = BeautifulSoup(url_content, 'html.parser')
+    tag_str = soup.find(name=tag, attrs=attrs)
+    if tag_str:
+        text = tag_str.text or tag_str['content']
+        if len(text) > 255:
+            text_list = text.split()
+            text_list[-1] = '...'
+            return ' '.join(text_list)
+        return text
+    else:
+        return ''
+
+
 def get_url_info(url):
     try:
         url_response = get_url_response(url)
@@ -33,20 +52,3 @@ def get_url_info(url):
                               {'name': "description"})
 
     return url_response.status_code, h1, title, description
-
-
-def normalize_url(url):
-    parsed_url = urlparse(url)
-    return f'{parsed_url.scheme}://{parsed_url.netloc}'
-
-
-def get_tag_str(url_content, tag, attrs={}):
-    soup = BeautifulSoup(url_content, 'html.parser')
-    tag_str = soup.find(name=tag, attrs=attrs)
-    if tag_str:
-        text = tag_str.text or tag_str['content']
-        if len(text) > 255:
-            text = text[:252] + "..."
-        return text
-    else:
-        return ''
