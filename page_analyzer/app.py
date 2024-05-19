@@ -13,7 +13,7 @@ app.secret_key = os.getenv('SECRET_KEY')
 
 @app.route('/')
 def main():
-    return render_template('index.html',)
+    return render_template('index.html')
 
 
 @app.route('/urls')
@@ -36,23 +36,6 @@ def show_url_page(url_id):
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('errors/404.html'), 404
-
-
-# @app.post('/urls')
-# def add_url():
-#     url = request.form.get('url')
-#     normal_url = normalize_url(url)
-#     url_info = db.check_url_exists(normal_url)
-#     message = validate_url(normal_url, url_info)
-#     flash(*message)
-#     if 'danger' in message:
-#         return render_template('index.html'), 422
-#     elif 'info' in message:
-#         url_id = url_info.id
-#     else:
-#         url_id = db.add_item(url)
-#
-#     return redirect(url_for('show_url_page', url_id=url_id))
 
 
 @app.post('/urls')
@@ -78,9 +61,11 @@ def add_url():
 @app.post('/urls/<int:url_id>/checks')
 def check_url_page(url_id):
     url = db.get_item(url_id).name
-    message, url_info = get_url_info(url)
-    flash(*message)
+    url_info = get_url_info(url)
     if url_info:
+        flash('Страница успешно проверена', 'success')
         db.add_check(url_id, url_info)
+    else:
+        flash('Произошла ошибка при проверке', 'danger')
 
     return redirect(url_for('show_url_page', url_id=url_id))
