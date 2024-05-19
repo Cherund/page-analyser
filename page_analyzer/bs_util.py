@@ -37,5 +37,4 @@ def get_url_info(url):
     description = get_tag_str(url_response.content, 'meta',
                               {'name': "description"})
 
-
     return url_response.status_code, h1, title, description
