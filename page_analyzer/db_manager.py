@@ -28,9 +28,6 @@ def with_commit(func):
             if conn:
                 conn.rollback()
             raise e
-        # finally:
-        #     if conn:
-        #         conn.close()
     return wrapper
 
 
