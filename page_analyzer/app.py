@@ -33,7 +33,6 @@ def show_url_page(url_id):
     if not url:
         abort(404)
 
-
     checks = db.get_url_checks(connect, url_id)
     db.close(connect)
     return render_template('url.html', url=url, checks=checks)
@@ -45,8 +44,8 @@ def page_not_found(_):
 
 
 @app.errorhandler(500)
-def page_not_found(_):
-    return render_template('errors/404.html'), 500
+def internal_error(_):
+    return render_template('errors/500.html'), 500
 
 
 @app.post('/urls')

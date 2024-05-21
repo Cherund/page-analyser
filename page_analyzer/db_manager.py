@@ -68,8 +68,8 @@ def insert_check(conn, url_id, url_info):
             'INSERT INTO url_checks (url_id, status_code, '
             'h1, title, description) '
             'VALUES (%s, %s, %s, %s, %s);',
-            (url_id, url_info['status_code'], url_info['h1'], url_info['title'],
-             url_info['description'])
+            (url_id, url_info['status_code'], url_info['h1'],
+             url_info['title'], url_info['description'])
         )
 
 
