@@ -1,21 +1,50 @@
 import psycopg2
-import os
 from psycopg2.extras import NamedTupleCursor
+from functools import wraps
 
 
-def add_item(url):
-    conn = psycopg2.connect(os.getenv('DATABASE_URL'))
+def connect_db(app):
+    return psycopg2.connect(app.config['DATABASE_URL'])
+
+
+def commit(conn):
+    conn.commit()
+
+
+def close(conn):
+    conn.close()
+
+
+def with_commit(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        conn = None
+        try:
+            conn = args[0]
+            result = func(*args, **kwargs)
+            conn.commit()
+            return result
+        except Exception as e:
+            if conn:
+                conn.rollback()
+            raise e
+        # finally:
+        #     if conn:
+        #         conn.close()
+    return wrapper
+
+
+@with_commit
+def insert_url(conn, url):
     with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
         curs.execute(
             'INSERT INTO urls (name) VALUES (%s) RETURNING id;',
             (url, )
         )
-        conn.commit()
         return curs.fetchone().id
 
 
-def get_item(url_id):
-    conn = psycopg2.connect(os.getenv('DATABASE_URL'))
+def get_url(conn, url_id):
     with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
         curs.execute(
             'SELECT * FROM urls WHERE id=(%s);', (url_id, )
@@ -23,8 +52,7 @@ def get_item(url_id):
         return curs.fetchone()
 
 
-def check_url_exists(url):
-    conn = psycopg2.connect(os.getenv('DATABASE_URL'))
+def check_url_exists(conn, url):
     with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
         curs.execute(
             'SELECT id, name FROM urls WHERE name=(%s)',
@@ -33,20 +61,19 @@ def check_url_exists(url):
         return curs.fetchone()
 
 
-def add_check(url_id, url_info):
-    conn = psycopg2.connect(os.getenv('DATABASE_URL'))
+@with_commit
+def insert_check(conn, url_id, url_info):
     with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
         curs.execute(
             'INSERT INTO url_checks (url_id, status_code, '
             'h1, title, description) '
             'VALUES (%s, %s, %s, %s, %s);',
-            (url_id, *url_info)
+            (url_id, url_info['status_code'], url_info['h1'], url_info['title'],
+             url_info['description'])
         )
-        conn.commit()
 
 
-def get_url_checks(url_id):
-    conn = psycopg2.connect(os.getenv('DATABASE_URL'))
+def get_url_checks(conn, url_id):
     with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
         curs.execute(
             'SELECT * FROM url_checks WHERE url_id=(%s) ORDER BY id DESC',
@@ -55,8 +82,7 @@ def get_url_checks(url_id):
         return curs.fetchall()
 
 
-def get_urls_last_check():
-    conn = psycopg2.connect(os.getenv('DATABASE_URL'))
+def get_urls_last_check(conn):
     with conn.cursor(cursor_factory=NamedTupleCursor) as curs:
         curs.execute('SELECT DISTINCT ON (urls.id) '
                      'urls.id AS id, '
