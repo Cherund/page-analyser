@@ -13,3 +13,6 @@ def validate_url(url):
 
     if not validators.url(url):
         return 'Некорректный URL'
+
+    if not url:
+        return 'URL обязателен для заполнения'
