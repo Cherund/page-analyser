@@ -4,7 +4,7 @@ from page_analyzer import db_manager as db
 from dotenv import load_dotenv
 import os
 from page_analyzer.utils import validate_url, normalize_url
-from page_analyzer.bs_util import get_url_info
+from page_analyzer.page_checker import get_url_info
 import requests
 
 app = Flask(__name__)
