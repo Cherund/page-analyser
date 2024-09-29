@@ -1,4 +1,4 @@
-# Page analyzer
+# Page analyser
 
 ### Hexlet and self written tests
 [![Actions Status](https://github.com/Cherund/python-project-83/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Cherund/python-project-83/actions)
@@ -6,24 +6,30 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/81b72b6b410e262c9524/maintainability)](https://codeclimate.com/github/Cherund/python-project-83/maintainability)
 
 ## Description
-Page Analyzer is a website that analyzes pages for SEO suitability, similar to [PageSpeed Insights](https://pagespeed.web.dev).
+Page Analyser is a website that analyzes pages for SEO suitability, similar to [PageSpeed Insights](https://pagespeed.web.dev).
 
 
 
-## Installation
+## Local Setup
+**After cloning the repository and setting up PostgreSQL DB**
 
-#### This app requires environmental variables:
-* DATABASE_URL - [variable for connecting to the database.](https://ru.hexlet.io/blog/posts/python-postgresql)
-* SECRET_KEY
-
-
-To start this project locally use this commands:
-
+1. **Install dependencies:**
 ```
 make install
+```
+2. **Set up environment variables:** Create a `.env` file and define:
+```
+SECRET_KEY=your-secret-key
+DATABASE_URL=postgres://page_analyser_user:your-password@localhost/page_analyser
+```
+
+3. **Build tables in DB:**
+```
 make build
+```
+4. **Run server in developer mode:**
+```
 make dev
 ```
 
-### Link
-[Page Analyzer](https://python-project-83-xs6c.onrender.com)
+### [Project on render](https://python-project-83-xs6c.onrender.com)
