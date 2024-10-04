@@ -8,7 +8,12 @@
 ## Description
 Page Analyser is a website that analyzes pages for SEO suitability, similar to [PageSpeed Insights](https://pagespeed.web.dev).
 
-
+## Technologies Used
+- Python 3.x
+- Flask 3.x
+- PostgreSQL
+- HTML/Bootstrap for frontend
+- Docker for containerization
 
 ## Local Setup
 **After cloning the repository and setting up PostgreSQL DB**
